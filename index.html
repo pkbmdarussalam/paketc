@@ -3,117 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengumuman Kelulusan</title>
+  <title>Pengumuman Kelulusan PKBM</title>
   <style>
+    /* Dasar Layout */
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
       text-align: center;
-      padding: 40px;
-      background-color: #f4f4f9;
+      padding: 20px;
+      margin: 0;
+      background-color: #f0f2f5;
+      color: #333;
     }
+
     .container {
-      max-width: 600px;
-      margin: auto;
-      border: 1px solid #ccc;
-      padding: 30px;
+      width: 95%; /* Lebar hampir full di HP */
+      max-width: 500px; /* Lebar maksimal di PC */
+      margin: 20px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
       background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-sizing: border-box; /* Agar padding tidak merusak lebar */
     }
-    .logo {
-      width: 80px;
-      height: 80px;
-      border: 2px solid #333;
-      border-radius: 50%;
-      line-height: 80px;
-      margin: 0 auto 20px auto;
-      font-weight: bold;
-      background-color: #eee;
+
+    /* Styling Logo */
+    .logo-container {
+      margin-bottom: 15px;
     }
+    .logo-img {
+      width: 80px; /* Ukuran pas untuk layar HP */
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Teks Header */
+    h3 {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    small {
+      display: block;
+      margin-top: 5px;
+      color: #777;
+    }
+
+    /* Input dan Tombol */
     input {
       padding: 12px;
-      width: 80%;
+      width: 100%; /* Full lebar container */
+      max-width: 300px;
       margin-top: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px; /* Mencegah auto-zoom di iPhone */
+      box-sizing: border-box;
+      outline: none;
     }
+    input:focus {
+      border-color: #3498db;
+    }
+
     button {
-      padding: 10px 25px;
+      padding: 12px 30px;
       margin-top: 15px;
-      background-color: #2c3e50;
+      background-color: #2980b9;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      width: 100%; /* Tombol lebar di HP agar mudah ditekan jari */
+      max-width: 300px;
+      font-weight: bold;
+      transition: background 0.3s;
     }
-    button:hover {
-      background-color: #34495e;
+    button:active {
+      background-color: #1c5980;
+      transform: scale(0.98);
     }
+
     hr {
-      margin: 25px 0;
+      margin: 20px 0;
       border: 0;
       border-top: 1px solid #eee;
     }
+
+    /* Hasil Pengumuman */
     #hasil {
-      margin-top: 20px;
-      min-height: 50px;
-      line-height: 1.6;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
     }
     .lulus {
       color: #27ae60;
-      font-weight: bold;
+      background-color: #eafaf1;
+      padding: 15px;
+      border: 1px solid #27ae60;
     }
     .tidak-ada {
       color: #e74c3c;
+      font-size: 14px;
+    }
+
+    /* Penyesuaian khusus layar sangat kecil */
+    @media (max-width: 360px) {
+      h3 { font-size: 1rem; }
+      body { padding: 10px; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-
- <div class="logo-container">
-  <img src="pkbm.png" alt="Logo PKBM Darussalam" class="logo-img" width="300px">
-</div>
+  <div class="logo-container">
+    <img src="pkbm.jpg" alt="Logo PKBM" class="logo-img" width="200">
+  </div>
 
   <h3>
     Pengumuman Kelulusan Paket C<br>
     PKBM Darussalam TP. 2025/2026<br>
-    <small style="font-size: 14px; color: #666;">Jln. Hos Cokroaminoto 399 A Kota Pekalongan</small>
+    <small>Kota Pekalongan</small>
   </h3>
 
   <hr>
 
-  <p>Selasa, 5 Mei 2026</p>
-  <p><b>Assalamualaikum wr.wb.</b></p>
-  <p>Silakan masukkan Nomor Induk Siswa Nasional (NISN) Anda untuk mengecek status kelulusan.</p>
+  <p style="font-size: 14px;">Selasa, 5 Mei 2026</p>
+  <p><b>Cek Status Kelulusan</b></p>
 
-  <input type="text" id="nisnInput" placeholder="Contoh: 12345678" onkeypress="handleKeyPress(event)">
+  <input type="number" id="nisnInput" placeholder="Masukkan NISN Anda" pattern="\d*">
   <br>
-  <button onclick="cek()">Cek Status</button>
+  <button onclick="cek()">Cek Sekarang</button>
 
   <hr>
 
   <div id="hasil"></div>
-
 </div>
 
 <script>
 let dataSiswa = [];
 
-// Membaca file data.txt dari Notepad
+// Load data dari notepad
 fetch('data.txt')
-  .then(response => {
-    if (!response.ok) throw new Error("File data.txt tidak ditemukan!");
-    return response.text();
-  })
+  .then(response => response.text())
   .then(text => {
-    // Membagi teks menjadi baris-baris
     let baris = text.trim().split('\n');
-    
-    // Memproses tiap baris menjadi objek {nisn, nama}
     dataSiswa = baris.map(item => {
       let bagian = item.split(',');
       return {
@@ -121,46 +157,31 @@ fetch('data.txt')
         nama: bagian[1] ? bagian[1].trim() : ""
       };
     });
-    console.log("Data berhasil dimuat:", dataSiswa.length, "siswa");
   })
   .catch(err => {
-    console.error(err);
-    document.getElementById("hasil").innerHTML = "Error: Gagal memuat data siswa.";
+    document.getElementById("hasil").innerHTML = "Gagal memuat data.";
   });
 
 function cek() {
   let inputVal = document.getElementById("nisnInput").value.trim();
   let display = document.getElementById("hasil");
 
-  if (inputVal === "") {
-    display.innerHTML = "<span class='tidak-ada'>Masukkan NISN terlebih dahulu!</span>";
+  if (!inputVal) {
+    display.innerHTML = "<span class='tidak-ada'>Isi NISN dulu ya!</span>";
     return;
   }
 
-  // Cari NISN yang cocok
   let siswa = dataSiswa.find(s => s.nisn === inputVal);
 
   if (siswa) {
     display.innerHTML = `
       <div class="lulus">
-        <span style="font-size: 18px;">${siswa.nama}</span><br>
-        <span style="font-size: 24px;">SELAMAT, ANDA LULUS! 🎉</span>
+        <strong>${siswa.nama}</strong><br>
+        <span style="font-size: 20px;">LULUS 🎉</span>
       </div>
     `;
   } else {
-    display.innerHTML = `
-      <div class="tidak-ada">
-        Data NISN <b>${inputVal}</b> tidak ditemukan.<br>
-        Pastikan nomor yang dimasukkan benar.
-      </div>
-    `;
-  }
-}
-
-// Fungsi agar bisa tekan "Enter" untuk cek
-function handleKeyPress(e) {
-  if (e.key === 'Enter') {
-    cek();
+    display.innerHTML = "<span class='tidak-ada'>NISN tidak terdaftar.</span>";
   }
 }
 </script>
