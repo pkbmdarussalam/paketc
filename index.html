@@ -75,12 +75,12 @@
       margin-top: 15px;
     }
 
-    /* Kotak Hasil Pengumuman */
+    /* Kotak Hasil Dasar */
     .box-hasil {
       padding: 20px;
       border-radius: 10px;
-      border: 2px solid #27ae60;
-      background-color: #f9fffb;
+      border: 2px solid #ccc;
+      background-color: #fff;
     }
 
     .nama-siswa {
@@ -91,9 +91,17 @@
       color: #2c3e50;
     }
 
+    /* Variasi Warna Status */
     .status-lulus {
       font-size: 22px;
-      color: #27ae60;
+      color: #27ae60; /* Hijau */
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-gagal {
+      font-size: 22px;
+      color: #e74c3c; /* Merah */
       font-weight: bold;
       text-transform: uppercase;
     }
@@ -116,7 +124,7 @@
   </h3>
 
   <hr>
- <p>Selasa, 5 Mei 2026</p>
+  <p>Selasa, 5 Mei 2026</p>
   <p><b>Assalamualaikum wr.wb.</b></p>
   <p>Masukkan NISN untuk melihat keterangan:</p>
   <input type="number" id="nisnInput" placeholder="Contoh: 001111" onkeypress="if(event.key==='Enter') cek()">
@@ -141,7 +149,7 @@ fetch('data2.txt')
       return {
         nisn: kolom[0] ? kolom[0].trim() : "",
         nama: kolom[1] ? kolom[1].trim() : "",
-        ket:  kolom[2] ? kolom[2].trim() : "" // Kolom ke-3 (Keterangan)
+        ket:  kolom[2] ? kolom[2].trim() : ""
       };
     });
   })
@@ -161,10 +169,16 @@ function cek() {
   let siswa = dataSiswa.find(s => s.nisn === input);
 
   if (siswa) {
+    // Tentukan warna berdasarkan kata "LULUS"
+    let isLulus = siswa.ket.toUpperCase() === "LULUS";
+    let warnaStatus = isLulus ? "status-lulus" : "status-gagal";
+    let warnaBorder = isLulus ? "#27ae60" : "#e74c3c";
+    let backgroundKotak = isLulus ? "#f9fffb" : "#fff9f9";
+
     display.innerHTML = `
-      <div class="box-hasil">
+      <div class="box-hasil" style="border-color: ${warnaBorder}; background-color: ${backgroundKotak};">
         <span class="nama-siswa">${siswa.nama}</span>
-        <span class="status-lulus">${siswa.ket}</span>
+        <span class="${warnaStatus}">${siswa.ket}</span>
       </div>
     `;
   } else {
