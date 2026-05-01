@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengumuman Kelulusan PKBM</title>
   <style>
-    /* Dasar Layout */
     body {
       font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
       text-align: center;
@@ -16,54 +15,40 @@
     }
 
     .container {
-      width: 95%; /* Lebar hampir full di HP */
-      max-width: 500px; /* Lebar maksimal di PC */
+      width: 95%;
+      max-width: 500px;
       margin: 20px auto;
       border: 1px solid #ddd;
-      padding: 20px;
+      padding: 25px;
       background-color: #fff;
       border-radius: 15px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      box-sizing: border-box; /* Agar padding tidak merusak lebar */
+      box-sizing: border-box;
     }
 
-    /* Styling Logo */
-    .logo-container {
-      margin-bottom: 15px;
-    }
     .logo-img {
-      width: 80px; /* Ukuran pas untuk layar HP */
+      width: 90px;
       height: auto;
       display: block;
-      margin: 0 auto;
+      margin: 0 auto 15px auto;
     }
 
-    /* Teks Header */
     h3 {
       font-size: 1.1rem;
       line-height: 1.4;
-      margin-bottom: 10px;
-    }
-    small {
-      display: block;
-      margin-top: 5px;
-      color: #777;
+      margin-bottom: 5px;
     }
 
-    /* Input dan Tombol */
     input {
       padding: 12px;
-      width: 100%; /* Full lebar container */
+      width: 100%;
       max-width: 300px;
       margin-top: 15px;
       border: 2px solid #ddd;
       border-radius: 8px;
-      font-size: 16px; /* Mencegah auto-zoom di iPhone */
+      font-size: 16px;
       box-sizing: border-box;
       outline: none;
-    }
-    input:focus {
-      border-color: #3498db;
     }
 
     button {
@@ -75,14 +60,9 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
-      width: 100%; /* Tombol lebar di HP agar mudah ditekan jari */
+      width: 100%;
       max-width: 300px;
       font-weight: bold;
-      transition: background 0.3s;
-    }
-    button:active {
-      background-color: #1c5980;
-      transform: scale(0.98);
     }
 
     hr {
@@ -91,54 +71,57 @@
       border-top: 1px solid #eee;
     }
 
-    /* Hasil Pengumuman */
     #hasil {
       margin-top: 15px;
-      padding: 10px;
-      border-radius: 8px;
-    }
-    .lulus {
-      color: #27ae60;
-      background-color: #eafaf1;
-      padding: 15px;
-      border: 1px solid #27ae60;
-    }
-    .tidak-ada {
-      color: #e74c3c;
-      font-size: 14px;
     }
 
-    /* Penyesuaian khusus layar sangat kecil */
-    @media (max-width: 360px) {
-      h3 { font-size: 1rem; }
-      body { padding: 10px; }
+    /* Kotak Hasil Pengumuman */
+    .box-hasil {
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #27ae60;
+      background-color: #f9fffb;
+    }
+
+    .nama-siswa {
+      font-size: 18px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .status-lulus {
+      font-size: 22px;
+      color: #27ae60;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .error-msg {
+      color: #e74c3c;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="logo-container">
-    <img src="pkbm.png" alt="Logo PKBM" class="logo-img" width="200">
-  </div>
+  <img src="pkbm.png" alt="Logo PKBM" class="logo-img" width="200px">
 
   <h3>
     Pengumuman Kelulusan Paket C<br>
     PKBM Darussalam TP. 2025/2026<br>
-    <small>Kota Pekalongan</small>
+    <small style="color: #777;">Kota Pekalongan</small>
   </h3>
 
   <hr>
-
  <p>Selasa, 5 Mei 2026</p>
   <p><b>Assalamualaikum wr.wb.</b></p>
-  <p>Silakan masukkan Nomor Induk Siswa Nasional (NISN) Anda untuk mengecek status kelulusan.</p>
-  
-  <p><b>Cek Status Kelulusan</b></p>
-
-  <input type="number" id="nisnInput" placeholder="Masukkan NISN Anda" pattern="\d*">
+  <p>Masukkan NISN untuk melihat keterangan:</p>
+  <input type="number" id="nisnInput" placeholder="Contoh: 001111" onkeypress="if(event.key==='Enter') cek()">
   <br>
-  <button onclick="cek()">Cek Sekarang</button>
+  <button onclick="cek()">Cek Hasil</button>
 
   <hr>
 
@@ -148,43 +131,44 @@
 <script>
 let dataSiswa = [];
 
-// Load data dari notepad
-fetch('data1.txt')
-  .then(response => response.text())
+// Mengambil data dari data2.txt
+fetch('data.txt')
+  .then(res => res.text())
   .then(text => {
     let baris = text.trim().split('\n');
     dataSiswa = baris.map(item => {
-      let bagian = item.split(',');
+      let kolom = item.split(',');
       return {
-        nisn: bagian[0] ? bagian[0].trim() : "",
-        nama: bagian[1] ? bagian[1].trim() : ""
+        nisn: kolom[0] ? kolom[0].trim() : "",
+        nama: kolom[1] ? kolom[1].trim() : "",
+        ket:  kolom[2] ? kolom[2].trim() : "" // Kolom ke-3 (Keterangan)
       };
     });
   })
   .catch(err => {
-    document.getElementById("hasil").innerHTML = "Gagal memuat data.";
+    console.error("Gagal load file:", err);
   });
 
 function cek() {
-  let inputVal = document.getElementById("nisnInput").value.trim();
+  let input = document.getElementById("nisnInput").value.trim();
   let display = document.getElementById("hasil");
 
-  if (!inputVal) {
-    display.innerHTML = "<span class='tidak-ada'>Isi NISN dulu ya!</span>";
+  if (!input) {
+    display.innerHTML = "<span class='error-msg'>Silakan isi NISN!</span>";
     return;
   }
 
-  let siswa = dataSiswa.find(s => s.nisn === inputVal);
+  let siswa = dataSiswa.find(s => s.nisn === input);
 
   if (siswa) {
     display.innerHTML = `
-      <div class="lulus">
-        <strong>${siswa.nama}</strong><br>
-        <span style="font-size: 20px;">Selamat Anda Dinyatakan LULUS 🎉</span>
+      <div class="box-hasil">
+        <span class="nama-siswa">${siswa.nama}</span>
+        <span class="status-lulus">${siswa.ket}</span>
       </div>
     `;
   } else {
-    display.innerHTML = "<span class='tidak-ada'>NISN tidak terdaftar.</span>";
+    display.innerHTML = "<span class='error-msg'>Data tidak ditemukan.</span>";
   }
 }
 </script>
