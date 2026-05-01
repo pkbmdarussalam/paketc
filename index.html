@@ -149,7 +149,7 @@
 let dataSiswa = [];
 
 // Load data dari notepad
-fetch('data.txt')
+fetch('data1.txt')
   .then(response => response.text())
   .then(text => {
     let baris = text.trim().split('\n');
@@ -180,7 +180,7 @@ function cek() {
     display.innerHTML = `
       <div class="lulus">
         <strong>${siswa.nama}</strong><br>
-        <span style="font-size: 20px;">LULUS 🎉</span>
+        <span style="font-size: 20px;">Selamat Anda Dinyatakan LULUS 🎉</span>
       </div>
     `;
   } else {
